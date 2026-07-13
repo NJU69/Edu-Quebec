@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ÉduQuébec — Prototype multiportails</title>
+<style>
+:root{
+  --nav:#082f67; --nav2:#0b4ea2; --bg:#f4f7fb; --card:#ffffff;
+  --line:#dfe6ef; --text:#172033; --muted:#667085;
+  --green:#16a36a; --red:#e5484d; --orange:#f59e0b; --blue:#2f80ed; --purple:#7c3aed;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}
+.hidden{display:none!important}
+.login{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr;background:#fff}
+.login-left{padding:72px;background:linear-gradient(135deg,#082f67,#0b4ea2);color:#fff;display:flex;flex-direction:column;justify-content:center}
+.logo{font-size:38px;font-weight:800}
+.logo small{display:block;font-size:13px;font-weight:500;opacity:.85;margin-top:4px}
+.hero{font-size:48px;line-height:1.06;margin:42px 0 14px;max-width:650px}
+.hero-sub{font-size:18px;line-height:1.6;max-width:620px;opacity:.92}
+.pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.pill{padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.13);font-size:13px}
+.login-right{display:flex;align-items:center;justify-content:center;padding:40px}
+.login-card{width:min(480px,100%);border:1px solid var(--line);border-radius:18px;padding:30px;box-shadow:0 24px 60px rgba(16,24,40,.12)}
+.login-card h2{margin:0 0 8px;font-size:30px}
+.label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.btn{border:0;border-radius:9px;padding:11px 14px;background:var(--nav2);color:#fff;cursor:pointer;font-weight:700}
+.btn.secondary{background:#fff;color:var(--nav2);border:1px solid var(--line)}
+.btn.success{background:var(--green)} .btn.danger{background:var(--red)}
+.btn.block{width:100%;margin-top:15px}
+.app{display:flex;min-height:100vh}
+.sidebar{width:248px;background:linear-gradient(180deg,var(--nav),#061e42);color:#fff;padding:18px 14px;position:fixed;inset:0 auto 0 0;overflow:auto}
+.brand{font-size:24px;font-weight:800;padding:2px 10px 15px}
+.brand small{display:block;font-size:10px;font-weight:400;opacity:.82;margin-top:3px}
+.rolebox{background:rgba(255,255,255,.08);padding:10px;border-radius:10px;margin:0 6px 14px;font-size:12px}
+.nav a{display:flex;gap:10px;align-items:center;color:#dce8ff;text-decoration:none;padding:10px 12px;border-radius:9px;margin:3px 0;font-size:13px}
+.nav a:hover,.nav a.active{background:var(--nav2);color:#fff}
+.userbox{margin:20px 6px 0;background:rgba(255,255,255,.08);padding:11px;border-radius:10px;font-size:12px}
+.main{margin-left:248px;width:calc(100% - 248px)}
+.topbar{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:3}
+.top-actions{display:flex;gap:8px;align-items:center}
+.page{display:none;padding:22px}
+.page.active{display:block}
+h1{font-size:28px;margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px;font-size:14px}
+.grid{display:grid;gap:15px}.grid4{grid-template-columns:repeat(4,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:repeat(2,1fr)}
+.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px;box-shadow:0 2px 8px rgba(16,24,40,.04)}
+.kpi{display:flex;align-items:center;justify-content:space-between}.kpi b{font-size:27px}.kpi .ico{font-size:26px}
+.small{font-size:12px;color:var(--muted)} .muted{color:var(--muted)}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800}
+.red{background:#fee2e2;color:#b42318}.orange{background:#fff0d6;color:#b54708}.green{background:#dcfae6;color:#027a48}.blue{background:#dbeafe;color:#1d4ed8}.purple{background:#ede9fe;color:#6d28d9}
+.table{width:100%;border-collapse:collapse;font-size:13px}.table th,.table td{padding:11px 9px;border-bottom:1px solid var(--line);text-align:left}.table th{background:#fafbfc;color:var(--muted)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.toolbar>*{max-width:280px}
+.list-item{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.progress{height:9px;background:#edf1f6;border-radius:99px;overflow:hidden}.progress span{display:block;height:100%;background:var(--blue)}
+.chart{height:210px;display:flex;align-items:flex-end;gap:12px;padding:10px 6px 25px}.bar{flex:1;background:linear-gradient(180deg,#4d97ff,#1e64d6);border-radius:8px 8px 0 0;position:relative}.bar span{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted)}
+.linechart{height:210px;position:relative;background:linear-gradient(#fff,#fafcff);border-radius:10px;overflow:hidden}
+.linechart svg{width:100%;height:100%}
+.profile{display:flex;gap:15px;align-items:center}.avatar{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;background:#dbeafe;color:var(--nav2);font-size:26px;font-weight:800}
+.tabs{display:flex;gap:18px;border-bottom:1px solid var(--line);margin:16px 0}.tabs button{border:0;background:none;padding:10px 0;color:var(--muted);cursor:pointer}.tabs button.active{color:var(--nav2);font-weight:800;border-bottom:2px solid var(--nav2)}
+.tabcontent{display:none}.tabcontent.active{display:block}
+.notice{padding:12px;border-radius:10px;background:#eef6ff;border:1px solid #cfe3ff;color:#1849a9;margin-bottom:14px}
+.food-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.food{background:#fafbfc;border:1px solid var(--line);border-radius:10px;padding:11px;text-align:center}.food .pic{font-size:34px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);align-items:center;justify-content:center;z-index:20}.modal.open{display:flex}.modal-box{width:min(640px,92vw);background:#fff;border-radius:15px;padding:22px}.close{float:right;border:0;background:none;font-size:23px;cursor:pointer}
+.form2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.role-switch{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+@media(max-width:1050px){.grid4,.grid3,.grid2,.food-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.login{grid-template-columns:1fr}.login-left{display:none}.sidebar{width:76px}.brand small,.brand span,.nav a span,.rolebox,.userbox{display:none}.main{margin-left:76px;width:calc(100% - 76px)}.grid4,.grid3,.grid2,.food-grid,.form2{grid-template-columns:1fr}.topbar{padding:0 12px}.page{padding:15px}}
+</style>
+</head>
+<body>
+<section id="login" class="login">
+  <div class="login-left">
+    <div class="logo">ÉduQuébec<small>Connecter. Soutenir. Réussir.</small></div>
+    <div class="hero">Une plateforme, plusieurs portails adaptés à chaque acteur.</div>
+    <div class="hero-sub">Explorez les interfaces Élève, Parent, Enseignant, Personnel scolaire spécialisé, Direction, Organisme communautaire, Mentor/Tuteur et Administrateur.</div>
+    <div class="pills"><span class="pill">ODD 4</span><span class="pill">ODD 2</span><span class="pill">Gestion des accès</span><span class="pill">IA responsable</span></div>
+  </div>
+  <div class="login-right">
+    <div class="login-card">
+      <h2>Connexion</h2>
+      <div class="muted">Choisissez un rôle pour ouvrir son portail.</div>
+      <label class="label">Profil</label>
+      <select id="loginRole">
+        <option value="student">Élève</option>
+        <option value="parent">Parent / Tuteur</option>
+        <option value="teacher">Enseignant</option>
+        <option value="specialist">Personnel scolaire spécialisé</option>
+        <option value="direction">Direction d'école</option>
+        <option value="org">Organisme communautaire</option>
+        <option value="mentor">Mentor / Tuteur</option>
+        <option value="admin">Administrateur</option>
+      </select>
+      <label class="label">Courriel</label><input value="demo@eduquebec.ca">
+      <label class="label">Mot de passe</label><input type="password" value="prototype">
+      <button class="btn block" onclick="login()">Accéder au portail</button>
+      <div class="small" style="margin-top:12px">Prototype académique — données fictives.</div>
+    </div>
+  </div>
+</section>
+
+<section id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand">ÉduQuébec<small>Connecter. Soutenir. Réussir.</small></div>
+    <div class="rolebox">Portail : <b id="roleName"></b></div>
+    <nav id="nav" class="nav"></nav>
+    <div class="userbox"><b id="userName"></b><br><span id="userTitle"></span></div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div><b id="topTitle"></b></div>
+      <div class="top-actions">
+        <select id="roleSwitch" class="role-switch" onchange="switchRole(this.value)">
+          <option value="student">Élève</option><option value="parent">Parent</option><option value="teacher">Enseignant</option><option value="specialist">Personnel spécialisé</option><option value="direction">Direction</option><option value="org">Organisme</option><option value="mentor">Mentor</option><option value="admin">Administrateur</option>
+        </select>
+        <button class="btn secondary" onclick="toast('Données synchronisées')">Synchroniser</button>
+        <button class="btn secondary" onclick="logout()">Déconnexion</button>
+      </div>
+    </div>
+    <div id="pages"></div>
+  </main>
+</section>
+
+<div id="modal" class="modal"><div class="modal-box"><button class="close" onclick="closeModal()">×</button><h2>Nouvelle intervention</h2><div class="form2"><div><label class="label">Élève</label><select><option>Alexandre L.</option><option>Fatou K.</option></select></div><div><label class="label">Type</label><select><option>Tutorat</option><option>Mentorat</option><option>Soutien nutritionnel</option><option>Rencontre TES</option></select></div></div><label class="label">Description</label><textarea rows="5"></textarea><div style="display:flex;justify-content:flex-end;gap:9px;margin-top:14px"><button class="btn secondary" onclick="closeModal()">Annuler</button><button class="btn success" onclick="saveIntervention()">Enregistrer</button></div></div></div>
+
+<script>
+const portals={
+student:{name:"Élève",user:"Alexandre L.",title:"Secondaire 2",top:"Mon espace élève",menu:[["studenthome","🏠","Accueil"],["results","📘","Mes résultats"],["work","📝","Travaux"],["calendar","📅","Calendrier"],["goals","🎯","Mes objectifs"],["resources","📚","Ressources"],["mentorpage","🤝","Mon mentor"],["messages","✉️","Messages"],["rewards","🏆","Récompenses"]]},
+parent:{name:"Parent / Tuteur",user:"Sophie Martin",title:"Parent d'Emma",top:"Portail parent",menu:[["parenthome","🏠","Accueil"],["child","👧","Mon enfant"],["absences","📆","Absences et retards"],["calendar","📅","Rendez-vous"],["intervention","🧭","Plan d'intervention"],["documents","📄","Documents à signer"],["nutrition","🥗","Nutrition"],["resources","📚","Ressources"],["messages","✉️","Messagerie"]]},
+teacher:{name:"Enseignant",user:"M. Lavoie",title:"Enseignant — Groupe 201",top:"Portail enseignant",menu:[["teacherhome","🏠","Accueil"],["groups","👥","Mes groupes"],["results","📊","Résultats"],["work","📝","Travaux"],["observations","🗒️","Observations"],["alerts","⚠️","Alertes"],["calendar","📅","Calendrier"],["messages","✉️","Communications"]]},
+specialist:{name:"Personnel scolaire spécialisé",user:"Marie Duval",title:"Psychoéducatrice",top:"Portail intervenant",menu:[["specialisthome","🏠","Accueil"],["assigned","👥","Mes élèves"],["alerts","⚠️","Alertes IA"],["intervention","🧭","Plan d'intervention"],["notes","📝","Notes d'évolution"],["calendar","📅","Rencontres"],["resources","📚","Ressources"],["partners","🤝","Partenaires"],["messages","✉️","Messagerie"],["reports","📊","Rapports"]]},
+direction:{name:"Direction d'école",user:"Mme Gagnon",title:"Direction — École des Horizons",top:"Portail direction",menu:[["directionhome","🏫","Tableau de bord"],["students","🎓","Élèves"],["interventions","🧭","Interventions"],["resourcesalloc","🧩","Ressources"],["staff","👩‍🏫","Personnel"],["reports","📊","Rapports"],["indicators","📈","Indicateurs ODD"],["partners","🤝","Partenaires"]]},
+org:{name:"Organisme communautaire",user:"Centre Jeunesse",title:"Organisme partenaire",top:"Portail organisme",menu:[["orghome","🏠","Accueil"],["referrals","📥","Références"],["followups","🧭","Mes suivis"],["availability","🗓️","Disponibilités"],["reports","📊","Rapports"],["messages","✉️","Messages"],["resources","📚","Ressources"]]},
+mentor:{name:"Mentor / Tuteur",user:"Julie Tremblay",title:"Mentore bénévole",top:"Portail mentor",menu:[["mentorhome","🏠","Accueil"],["mentees","👥","Mes élèves"],["sessions","📅","Séances"],["resources","📚","Ressources"],["notes","📝","Notes"],["messages","✉️","Messages"]]},
+admin:{name:"Administrateur",user:"Administrateur",title:"Administrateur système",top:"Administration ÉduQuébec",menu:[["adminhome","🛡️","Accueil"],["users","👥","Utilisateurs"],["schools","🏫","Écoles"],["roles","🔐","Rôles et permissions"],["security","🛡️","Sécurité"],["integrations","🔌","Intégrations"],["ai","🤖","Paramètres IA"],["reports","📊","Rapports"],["audit","📜","Audit"],["indicators","📈","Indicateurs ODD"],["backups","💾","Sauvegardes"]]}
+};
+
+const pages={
+studenthome:`<section id="studenthome" class="page"><h1>Bonjour, Alexandre 👋</h1><div class="sub">Voici un aperçu de ton tableau de bord.</div><div class="grid grid3"><div class="card"><div class="small">Moyenne générale</div><b style="font-size:34px;color:#16a36a">85 %</b><div class="small">Très bien!</div></div><div class="card"><div class="small">Travaux à remettre</div><b style="font-size:34px;color:#2f80ed">2</b><div class="small">Avant vendredi</div></div><div class="card"><div class="small">Prochain rendez-vous</div><b>Conseiller d'orientation</b><p>15 mai — 10 h</p></div></div><div class="grid grid2" style="margin-top:15px"><div class="card"><h3>Mes matières</h3><p>Mathématiques 90 %</p><div class="progress"><span style="width:90%"></span></div><p>Français 88 %</p><div class="progress"><span style="width:88%;background:#16a36a"></span></div><p>Anglais 78 %</p><div class="progress"><span style="width:78%;background:#f59e0b"></span></div></div><div class="card"><h3>Objectif actuel</h3><p>Améliorer mes résultats en mathématiques.</p><div class="progress"><span style="width:75%;background:#16a36a"></span></div><p class="small">3 objectifs sur 4 atteints</p></div></div></section>`,
+parenthome:`<section id="parenthome" class="page"><h1>Bonjour, Sophie Martin 👋</h1><div class="sub">Vous consultez le dossier d'Emma Martin.</div><div class="grid grid3"><div class="card"><div class="small">Progression scolaire</div><b style="font-size:34px">82 %</b><div class="small">En hausse de 5 %</div></div><div class="card"><div class="small">Absences</div><b style="font-size:34px">7 jours</b><div class="small">Ce mois-ci</div></div><div class="card"><div class="small">Prochain rendez-vous</div><b>Rencontre TES</b><p>20 mai — 9 h</p></div></div><div class="grid grid2" style="margin-top:15px"><div class="card"><h3>Recommandations et suivis</h3><div class="list-item"><span>Soutien en lecture</span><span class="badge green">Validé</span></div><div class="list-item"><span>Plan d'intervention</span><span class="badge orange">En cours</span></div><div class="list-item"><span>Suivi nutritionnel</span><span class="badge blue">À suivre</span></div></div><div class="card"><h3>Documents à signer</h3><div class="list-item"><span>Autorisation sortie scolaire</span><span class="badge orange">À signer</span></div><div class="list-item"><span>Consentement partage de données</span><span class="badge orange">À signer</span></div></div></div></section>`,
+teacherhome:`<section id="teacherhome" class="page"><h1>Bonjour, M. Lavoie 👋</h1><div class="sub">Vue d'ensemble du groupe Secondaire 2 — Groupe 201</div><div class="grid grid3"><div class="card"><div class="small">Élèves</div><b style="font-size:34px">28</b></div><div class="card"><div class="small">Alertes actives</div><b style="font-size:34px;color:#e5484d">5</b></div><div class="card"><div class="small">Travaux en retard</div><b style="font-size:34px;color:#f59e0b">8</b></div></div><div class="card" style="margin-top:15px"><h3>Vue d'ensemble des élèves</h3><table class="table"><tr><th>Élève</th><th>Moyenne</th><th>Absences</th><th>Alerte</th></tr><tr><td>Emma Martin</td><td>82 %</td><td>2</td><td><span class="badge orange">À surveiller</span></td></tr><tr><td>Jacob Roy</td><td>75 %</td><td>4</td><td><span class="badge red">Élevé</span></td></tr><tr><td>Léa Tremblay</td><td>90 %</td><td>1</td><td><span class="badge green">Stable</span></td></tr></table></div></section>`,
+specialisthome:`<section id="specialisthome" class="page"><h1>Bonjour, Marie Duval 👋</h1><div class="sub">Psychoéducatrice</div><div class="grid grid2"><div class="card"><h3>Alertes prioritaires</h3><div class="list-item"><div><b>Jacob Roy</b><div class="small">Risque d'échec élevé</div></div><span class="badge red">Élevé</span></div><div class="list-item"><div><b>Noah Bouchard</b><div class="small">Absentéisme persistant</div></div><span class="badge red">Élevé</span></div><div class="list-item"><div><b>Mia Lafontaine</b><div class="small">Difficulté d'attention</div></div><span class="badge orange">Moyen</span></div></div><div class="card"><h3>Interventions en cours</h3><b style="font-size:34px;color:#2f80ed">8</b><p>élèves suivis</p><button class="btn" onclick="openModal()">Créer une intervention</button></div></div><div class="card" style="margin-top:15px"><h3>Recommandations IA</h3><p>Soutien intensif recommandé pour Jacob Roy en mathématiques. Probabilité d'échec : 75 % sans intervention.</p></div></section>`,
+directionhome:`<section id="directionhome" class="page"><h1>Bonjour, Mme Gagnon 👋</h1><div class="sub">Direction — École des Horizons</div><div class="grid grid4"><div class="card kpi"><div><div class="small">Élèves</div><b>642</b></div><div class="ico">🎓</div></div><div class="card kpi"><div><div class="small">Élèves à risque</div><b style="color:#e5484d">78</b></div><div class="ico">⚠️</div></div><div class="card kpi"><div><div class="small">Interventions</div><b style="color:#16a36a">132</b></div><div class="ico">🧭</div></div><div class="card kpi"><div><div class="small">Taux de réussite</div><b style="color:#16a36a">87 %</b></div><div class="ico">📈</div></div></div><div class="grid grid2" style="margin-top:15px"><div class="card"><h3>Répartition des alertes</h3><div class="chart"><div class="bar" style="height:80%"><span>Primaire</span></div><div class="bar" style="height:55%"><span>Sec.1</span></div><div class="bar" style="height:45%"><span>Sec.2</span></div><div class="bar" style="height:30%"><span>Sec.3</span></div></div></div><div class="card"><h3>Taux d'absentéisme</h3><div class="linechart"><svg viewBox="0 0 500 220"><polyline fill="none" stroke="#2f80ed" stroke-width="4" points="20,170 90,150 160,155 230,130 300,120 370,100 470,75"/></svg></div></div></div></section>`,
+orghome:`<section id="orghome" class="page"><h1>Bonjour, Centre Jeunesse 👋</h1><div class="sub">Organisme communautaire</div><div class="grid grid3"><div class="card"><h3>Références récentes</h3><div class="list-item"><span>Jacob Roy — Soutien en mathématiques</span><span class="badge orange">En attente</span></div><div class="list-item"><span>Mia Lafontaine — Soutien socioémotionnel</span><span class="badge green">Accepté</span></div><div class="list-item"><span>Noah Bouchard — Absentéisme scolaire</span><span class="badge green">Accepté</span></div></div><div class="card"><h3>Capacité d'accueil</h3><b style="font-size:38px;color:#2f80ed">70 %</b><p>21 / 30 places disponibles</p></div><div class="card"><h3>Mes suivis en cours</h3><p>Mia Lafontaine — En cours</p><p>Noah Bouchard — En cours</p></div></div></section>`,
+mentorhome:`<section id="mentorhome" class="page"><h1>Bonjour, Julie Tremblay 👋</h1><div class="sub">Mentore</div><div class="grid grid2"><div class="card"><h3>Mes élèves</h3><div class="list-item"><span>Emma Martin</span><span>16 mai — 15 h</span></div><div class="list-item"><span>Jacob Roy</span><span>17 mai — 10 h</span></div><div class="list-item"><span>Léa Tremblay</span><span>18 mai — 10 h</span></div></div><div class="card"><h3>Ressources pédagogiques</h3><p>Fiches de lecture</p><p>Exercices de mathématiques</p><p>Vidéos explicatives</p><p>Jeux éducatifs</p></div></div></section>`,
+adminhome:`<section id="adminhome" class="page"><h1>Bonjour, Administrateur 👋</h1><div class="sub">Vue d'ensemble de la plateforme</div><div class="grid grid4"><div class="card kpi"><div><div class="small">Utilisateurs actifs</div><b>4 812</b></div><div class="ico">👥</div></div><div class="card kpi"><div><div class="small">Écoles actives</div><b>215</b></div><div class="ico">🏫</div></div><div class="card kpi"><div><div class="small">Alertes actives</div><b style="color:#e5484d">248</b></div><div class="ico">⚠️</div></div><div class="card kpi"><div><div class="small">Disponibilité</div><b style="color:#16a36a">99,9 %</b></div><div class="ico">☁️</div></div></div><div class="grid grid2" style="margin-top:15px"><div class="card"><h3>Utilisateurs par rôle</h3><div class="chart"><div class="bar" style="height:90%"><span>Élèves</span></div><div class="bar" style="height:55%"><span>Parents</span></div><div class="bar" style="height:40%"><span>Ens.</span></div><div class="bar" style="height:25%"><span>Org.</span></div></div></div><div class="card"><h3>Journal d'audit</h3><div class="list-item"><span>Connexion — M. Lavoie</span><span>12 mai, 10:23</span></div><div class="list-item"><span>Modification plan — M. Duval</span><span>12 mai, 09:18</span></div><div class="list-item"><span>Ajout utilisateur — Admin</span><span>11 mai, 16:22</span></div></div></div></section>`,
+results:`<section id="results" class="page"><h1>Résultats</h1><div class="sub">Consulter les résultats autorisés.</div><div class="card"><table class="table"><tr><th>Matière</th><th>Résultat</th><th>Évolution</th></tr><tr><td>Mathématiques</td><td>90 %</td><td><span class="badge green">+4 %</span></td></tr><tr><td>Français</td><td>88 %</td><td><span class="badge green">+2 %</span></td></tr><tr><td>Anglais</td><td>78 %</td><td><span class="badge orange">Stable</span></td></tr></table></div></section>`,
+work:`<section id="work" class="page"><h1>Travaux</h1><div class="card"><div class="list-item"><span>Devoir de mathématiques</span><span class="badge orange">Vendredi</span></div><div class="list-item"><span>Lecture — chapitre 4</span><span class="badge blue">Lundi</span></div></div></section>`,
+calendar:`<section id="calendar" class="page"><h1>Calendrier</h1><div class="card"><table class="table"><tr><th>Date</th><th>Activité</th><th>Statut</th></tr><tr><td>15 mai — 10 h</td><td>Conseiller d'orientation</td><td><span class="badge green">Confirmé</span></td></tr><tr><td>20 mai — 9 h</td><td>Rencontre TES</td><td><span class="badge blue">Planifié</span></td></tr></table></div></section>`,
+goals:`<section id="goals" class="page"><h1>Mes objectifs</h1><div class="card"><div class="list-item"><span>Remettre tous les travaux</span><span class="badge green">80 %</span></div><div class="list-item"><span>Améliorer la présence</span><span class="badge orange">65 %</span></div></div></section>`,
+resources:`<section id="resources" class="page"><h1>Ressources</h1><div class="card"><div class="list-item"><span>Guide du système scolaire québécois</span><button class="btn secondary">Voir</button></div><div class="list-item"><span>Aide aux devoirs</span><button class="btn secondary">Voir</button></div><div class="list-item"><span>Aide financière et alimentaire</span><button class="btn secondary">Voir</button></div></div></section>`,
+mentorpage:`<section id="mentorpage" class="page"><h1>Mon mentor</h1><div class="card"><p>Samuel R. t'accompagne dans tes objectifs scolaires.</p><button class="btn">Envoyer un message</button></div></section>`,
+messages:`<section id="messages" class="page"><h1>Messagerie</h1><div class="grid grid2"><div class="card"><div class="list-item"><span>École des Horizons</span><span class="badge blue">Nouveau</span></div><div class="list-item"><span>Centre Jeunesse</span><span class="badge green">Lu</span></div></div><div class="card"><textarea rows="7" placeholder="Votre message..."></textarea><button class="btn" onclick="toast('Message envoyé')">Envoyer</button></div></div></section>`,
+rewards:`<section id="rewards" class="page"><h1>Récompenses</h1><div class="card"><div class="list-item"><span>Super participation</span><span class="badge green">+10 points</span></div><div class="list-item"><span>Travail remis à temps</span><span class="badge blue">+5 points</span></div></div></section>`,
+child:`<section id="child" class="page"><h1>Mon enfant</h1><div class="card"><h3>Emma Martin</h3><p>Secondaire 2 — Groupe 201</p><p>Progression globale : 82 %</p></div></section>`,
+absences:`<section id="absences" class="page"><h1>Absences et retards</h1><div class="card"><table class="table"><tr><th>Date</th><th>Type</th><th>Justification</th></tr><tr><td>10 mai</td><td>Absence</td><td>Justifiée</td></tr><tr><td>6 mai</td><td>Retard</td><td>Transport</td></tr></table></div></section>`,
+intervention:`<section id="intervention" class="page"><h1>Plan d'intervention</h1><div class="card"><h3>Objectif principal</h3><p>Améliorer la réussite en mathématiques et réduire les absences.</p><button class="btn" onclick="openModal()">Ajouter une intervention</button></div></section>`,
+documents:`<section id="documents" class="page"><h1>Documents à signer</h1><div class="card"><div class="list-item"><span>Consentement de partage des données</span><button class="btn success" onclick="toast('Document signé')">Signer</button></div><div class="list-item"><span>Autorisation sortie scolaire</span><button class="btn success" onclick="toast('Document signé')">Signer</button></div></div></section>`,
+nutrition:`<section id="nutrition" class="page"><h1>Module nutritionnel</h1><div class="notice">Budget estimé : 455 $ par semaine — Famille de 4 personnes.</div><div class="food-grid"><div class="food"><div class="pic">🍛</div><b>Lundi</b></div><div class="food"><div class="pic">🥪</div><b>Mardi</b></div><div class="food"><div class="pic">🍝</div><b>Mercredi</b></div><div class="food"><div class="pic">🌯</div><b>Jeudi</b></div><div class="food"><div class="pic">🥗</div><b>Vendredi</b></div></div></section>`,
+groups:`<section id="groups" class="page"><h1>Mes groupes</h1><div class="card"><table class="table"><tr><th>Groupe</th><th>Élèves</th><th>Alertes</th></tr><tr><td>Secondaire 2 — 201</td><td>28</td><td>5</td></tr><tr><td>Secondaire 2 — 202</td><td>26</td><td>3</td></tr></table></div></section>`,
+observations:`<section id="observations" class="page"><h1>Observations</h1><div class="card"><textarea rows="8" placeholder="Ajouter une observation pédagogique..."></textarea><button class="btn" onclick="toast('Observation enregistrée')">Enregistrer</button></div></section>`,
+alerts:`<section id="alerts" class="page"><h1>Alertes</h1><div class="card"><table class="table"><tr><th>Élève</th><th>Motif</th><th>Niveau</th></tr><tr><td>Jacob Roy</td><td>Risque d'échec</td><td><span class="badge red">Élevé</span></td></tr><tr><td>Noah Bouchard</td><td>Absentéisme</td><td><span class="badge red">Élevé</span></td></tr></table></div></section>`,
+assigned:`<section id="assigned" class="page"><h1>Mes élèves</h1><div class="card"><table class="table"><tr><th>Élève</th><th>Niveau</th><th>Suivi</th></tr><tr><td>Jacob Roy</td><td>Secondaire 2</td><td>Mathématiques</td></tr><tr><td>Noah Bouchard</td><td>Secondaire 1</td><td>Absentéisme</td></tr></table></div></section>`,
+notes:`<section id="notes" class="page"><h1>Notes d'évolution</h1><div class="card"><textarea rows="8" placeholder="Rédiger une note..."></textarea><button class="btn" onclick="toast('Note enregistrée')">Enregistrer</button></div></section>`,
+partners:`<section id="partners" class="page"><h1>Partenaires</h1><div class="grid grid3"><div class="card"><h3>Centre Jeunesse</h3><p>Mentorat et soutien scolaire</p></div><div class="card"><h3>Banque alimentaire</h3><p>Soutien nutritionnel</p></div><div class="card"><h3>Université partenaire</h3><p>Tutorat bénévole</p></div></div></section>`,
+reports:`<section id="reports" class="page"><h1>Rapports</h1><div class="grid grid3"><div class="card"><h3>Interventions complétées</h3><b style="font-size:34px">78 %</b></div><div class="card"><h3>Satisfaction</h3><b style="font-size:34px">91 %</b></div><div class="card"><h3>Réduction du risque</h3><b style="font-size:34px">18 %</b></div></div></section>`,
+students:`<section id="students" class="page"><h1>Élèves</h1><div class="card"><table class="table"><tr><th>Nom</th><th>Niveau</th><th>Statut</th></tr><tr><td>Emma Martin</td><td>Secondaire 2</td><td><span class="badge green">Stable</span></td></tr><tr><td>Jacob Roy</td><td>Secondaire 2</td><td><span class="badge red">À risque</span></td></tr></table></div></section>`,
+interventions:`<section id="interventions" class="page"><h1>Interventions</h1><div class="grid grid3"><div class="card"><h3>Tutorat</h3><b>52 actifs</b></div><div class="card"><h3>Mentorat</h3><b>31 actifs</b></div><div class="card"><h3>Soutien psychosocial</h3><b>49 actifs</b></div></div></section>`,
+resourcesalloc:`<section id="resourcesalloc" class="page"><h1>Ressources</h1><div class="grid grid3"><div class="card"><h3>TES</h3><b>8 disponibles</b></div><div class="card"><h3>Tuteurs</h3><b>12 disponibles</b></div><div class="card"><h3>Organismes</h3><b>16 actifs</b></div></div></section>`,
+staff:`<section id="staff" class="page"><h1>Personnel</h1><div class="card"><table class="table"><tr><th>Nom</th><th>Rôle</th><th>Charge</th></tr><tr><td>Marie Duval</td><td>Psychoéducatrice</td><td>8 dossiers</td></tr><tr><td>Luc Martin</td><td>TES</td><td>12 dossiers</td></tr></table></div></section>`,
+indicators:`<section id="indicators" class="page"><h1>Indicateurs ODD</h1><div class="grid grid3"><div class="card"><h3>ODD 4</h3><p>Réussite éducative et réduction des inégalités.</p></div><div class="card"><h3>ODD 2</h3><p>Soutien alimentaire aux familles vulnérables.</p></div><div class="card"><h3>ODD 17</h3><p>Partenariats entre écoles et organismes.</p></div></div></section>`,
+referrals:`<section id="referrals" class="page"><h1>Références</h1><div class="card"><table class="table"><tr><th>Élève</th><th>Besoin</th><th>Action</th></tr><tr><td>Jacob Roy</td><td>Soutien en mathématiques</td><td><button class="btn success" onclick="toast('Référence acceptée')">Accepter</button></td></tr><tr><td>Mia Lafontaine</td><td>Soutien socioémotionnel</td><td><button class="btn success">Accepter</button></td></tr></table></div></section>`,
+followups:`<section id="followups" class="page"><h1>Mes suivis</h1><div class="card"><table class="table"><tr><th>Élève</th><th>Service</th><th>Statut</th></tr><tr><td>Mia Lafontaine</td><td>Mentorat</td><td><span class="badge green">En cours</span></td></tr><tr><td>Noah Bouchard</td><td>Accompagnement scolaire</td><td><span class="badge green">En cours</span></td></tr></table></div></section>`,
+availability:`<section id="availability" class="page"><h1>Disponibilités</h1><div class="card"><label class="label">Places disponibles</label><input value="21"><label class="label">Jours disponibles</label><select><option>Lundi au jeudi</option></select><button class="btn" onclick="toast('Disponibilités mises à jour')">Enregistrer</button></div></section>`,
+mentees:`<section id="mentees" class="page"><h1>Mes élèves</h1><div class="card"><table class="table"><tr><th>Élève</th><th>Objectif</th><th>Prochaine séance</th></tr><tr><td>Emma Martin</td><td>Lecture</td><td>16 mai — 15 h</td></tr><tr><td>Jacob Roy</td><td>Mathématiques</td><td>17 mai — 10 h</td></tr></table></div></section>`,
+sessions:`<section id="sessions" class="page"><h1>Séances</h1><div class="card"><table class="table"><tr><th>Date</th><th>Élève</th><th>Type</th></tr><tr><td>16 mai — 15 h</td><td>Emma Martin</td><td>Français</td></tr><tr><td>17 mai — 10 h</td><td>Jacob Roy</td><td>Mathématiques</td></tr></table></div></section>`,
+users:`<section id="users" class="page"><h1>Utilisateurs</h1><div class="toolbar"><input placeholder="Rechercher un utilisateur"><button class="btn">Ajouter</button></div><div class="card"><table class="table"><tr><th>Nom</th><th>Rôle</th><th>Statut</th><th>Action</th></tr><tr><td>Marie Duval</td><td>Personnel spécialisé</td><td><span class="badge green">Actif</span></td><td><button class="btn danger" onclick="toast('Accès révoqué')">Révoquer</button></td></tr><tr><td>M. Lavoie</td><td>Enseignant</td><td><span class="badge green">Actif</span></td><td><button class="btn danger">Révoquer</button></td></tr></table></div></section>`,
+schools:`<section id="schools" class="page"><h1>Écoles</h1><div class="card"><table class="table"><tr><th>École</th><th>Région</th><th>Statut</th></tr><tr><td>École des Horizons</td><td>Capitale-Nationale</td><td><span class="badge green">Active</span></td></tr><tr><td>École du Fleuve</td><td>Chaudière-Appalaches</td><td><span class="badge green">Active</span></td></tr></table></div></section>`,
+roles:`<section id="roles" class="page"><h1>Rôles et permissions</h1><div class="card"><table class="table"><tr><th>Rôle</th><th>Accès</th><th>Portée</th></tr><tr><td>Parent</td><td>Lecture</td><td>Matricule de son enfant</td></tr><tr><td>Enseignant</td><td>Lecture / observations</td><td>Ses groupes</td></tr><tr><td>Organisme</td><td>Lecture limitée</td><td>Élèves référés</td></tr><tr><td>Administrateur</td><td>Complet</td><td>Toute la plateforme</td></tr></table></div></section>`,
+security:`<section id="security" class="page"><h1>Sécurité</h1><div class="grid grid3"><div class="card"><h3>MFA</h3><p>Authentification multifacteur active.</p></div><div class="card"><h3>RBAC</h3><p>Gestion des accès basée sur les rôles.</p></div><div class="card"><h3>Chiffrement</h3><p>Données chiffrées en transit et au repos.</p></div></div></section>`,
+integrations:`<section id="integrations" class="page"><h1>Intégrations</h1><div class="card"><div class="list-item"><span>Mozaïk-Portail</span><span class="badge green">Connecté</span></div><div class="list-item"><span>Autres API</span><span class="badge green">Connecté</span></div></div></section>`,
+ai:`<section id="ai" class="page"><h1>Paramètres IA</h1><div class="card"><label class="label">Seuil d'alerte élevé</label><input type="range" min="0" max="100" value="70"><label class="label">Validation humaine obligatoire</label><select><option>Oui</option></select></div></section>`,
+audit:`<section id="audit" class="page"><h1>Journal d'audit</h1><div class="card"><table class="table"><tr><th>Date</th><th>Utilisateur</th><th>Action</th></tr><tr><td>12 mai — 10:23</td><td>M. Lavoie</td><td>Connexion</td></tr><tr><td>12 mai — 09:18</td><td>Marie Duval</td><td>Modification d'un plan</td></tr></table></div></section>`,
+backups:`<section id="backups" class="page"><h1>Sauvegardes</h1><div class="card"><h3>État des sauvegardes</h3><p>Dernière sauvegarde : aujourd'hui, 02 h 00</p><span class="badge green">Réussie</span></div></section>`
+};
+
+function login(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');switchRole(document.getElementById('loginRole').value)}
+function logout(){document.getElementById('app').classList.add('hidden');document.getElementById('login').classList.remove('hidden')}
+function switchRole(role){
+  const d=portals[role];
+  document.getElementById('roleSwitch').value=role;
+  document.getElementById('roleName').textContent=d.name;
+  document.getElementById('userName').textContent=d.user;
+  document.getElementById('userTitle').textContent=d.title;
+  document.getElementById('topTitle').textContent=d.top;
+  const nav=document.getElementById('nav'); nav.innerHTML='';
+  const wrap=document.getElementById('pages'); wrap.innerHTML='';
+  d.menu.forEach((m,i)=>{
+    const a=document.createElement('a'); a.href='#'; a.dataset.page=m[0]; a.innerHTML=`${m[1]} <span>${m[2]}</span>`;
+    a.onclick=(e)=>{e.preventDefault();go(m[0])}; if(i===0)a.classList.add('active'); nav.appendChild(a);
+    wrap.insertAdjacentHTML('beforeend',pages[m[0]]||`<section id="${m[0]}" class="page"><h1>${m[2]}</h1><div class="card">Écran de démonstration.</div></section>`);
+  });
+  go(d.menu[0][0]);
+}
+function go(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const p=document.getElementById(id);if(p)p.classList.add('active');document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.page===id));window.scrollTo(0,0)}
+function openModal(){document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function saveIntervention(){closeModal();toast('Intervention enregistrée')}
+function toast(msg){const t=document.createElement('div');t.textContent=msg;t.style='position:fixed;right:20px;bottom:20px;background:#172033;color:#fff;padding:12px 16px;border-radius:9px;z-index:40;box-shadow:0 10px 25px rgba(0,0,0,.25)';document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+</script>
+</body>
+</html>
